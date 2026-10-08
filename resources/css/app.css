@@ -1,0 +1,178 @@
+@import 'tailwindcss';
+
+@source '../views';
+@source '../js';
+
+/* Design tokens — "Warm Paper & Spruce" palette. Change colours and fonts here. */
+@theme {
+    --font-sans: 'Noto Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Plus Jakarta Sans', 'Noto Sans', ui-sans-serif, system-ui, sans-serif;
+
+    /* Neutrals */
+    --color-paper: #fbfaf8;          /* page background */
+    --color-surface: #f4f2ed;        /* cards, bands, chips */
+    --color-line: #e7e4dc;           /* borders, dividers */
+    --color-faint: #b8b3a7;          /* placeholders, disabled */
+    --color-muted: #7a7569;          /* meta text, captions */
+    --color-body: #454138;           /* body copy */
+    --color-ink: #1f1c18;            /* headings */
+
+    /* Accent — Spruce */
+    --color-accent: #31685a;         /* CTAs, links, badges, metrics */
+    --color-accent-strong: #275248;  /* hover / pressed */
+    --color-accent-soft: #e2ebe6;    /* tinted chips, selected states */
+
+    /* Support */
+    --color-star: #d8a444;           /* review stars only */
+    --color-success: #4f8264;        /* positive deltas */
+
+    /* Bold layer — dark bands and highlights that make the page pop */
+    --color-night: #0b241f;          /* hero, process band, footer */
+    --color-night-soft: #14352d;     /* cards on dark */
+    --color-mint: #8fe6c1;           /* highlight text on dark */
+    --color-sun: #f6b93b;            /* main button on dark, small highlights */
+    --color-sun-strong: #e9a41c;
+
+    /* One colour per service group */
+    --color-dev: #1c8a6e;
+    --color-dev-soft: #dcf2ea;
+    --color-design: #d4841a;
+    --color-design-soft: #fbecd2;
+    --color-marketing: #d6513c;
+    --color-marketing-soft: #fbe1da;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+    body {
+        @apply bg-paper font-sans text-body antialiased;
+        font-size: 1.0625rem;
+        line-height: 1.6;
+    }
+    h1, h2, h3 {
+        @apply font-display font-bold text-ink;
+        letter-spacing: -0.025em;
+        line-height: 1.1;
+        text-wrap: balance;
+    }
+    :focus-visible {
+        outline: 3px solid var(--color-accent);
+        outline-offset: 2px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+        *, *::before, *::after {
+            transition-duration: 0.01ms !important;
+            animation-duration: 0.01ms !important;
+        }
+    }
+}
+
+@layer components {
+    .wrap {
+        @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+    }
+    .section {
+        @apply py-16 sm:py-24;
+    }
+    .h-section {
+        @apply text-3xl sm:text-[2.6rem];
+    }
+    .lead {
+        @apply max-w-2xl text-lg text-body;
+    }
+    .btn {
+        @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-6 py-3 text-base font-semibold transition-colors;
+    }
+    .btn-primary {
+        @apply bg-accent text-white shadow-[0_8px_20px_-8px_rgba(49,104,90,0.7)] hover:bg-accent-strong;
+    }
+    .btn-sun {
+        @apply bg-sun text-night shadow-[0_10px_24px_-10px_rgba(246,185,59,0.9)] hover:bg-sun-strong;
+    }
+    .btn-ghost {
+        @apply border border-white/25 text-white hover:border-white hover:bg-white/10;
+    }
+    .btn-outline {
+        @apply border border-line bg-white text-accent hover:border-accent hover:text-accent-strong;
+    }
+    .link {
+        @apply font-semibold text-accent underline decoration-accent/40 underline-offset-4 hover:text-accent-strong hover:decoration-accent-strong;
+    }
+    .field-label {
+        @apply mb-1.5 block text-sm font-semibold text-ink;
+    }
+    .field {
+        @apply block w-full rounded-lg border border-line bg-white px-4 py-3 text-base text-ink placeholder:text-faint focus:border-accent;
+    }
+    .field-error {
+        @apply mt-1.5 text-sm font-medium text-red-700;
+    }
+}
+
+/* Colour identity for each service group. Use with bg-[var(--tone)] etc. */
+.tone-development { --tone: var(--color-dev); --tone-soft: var(--color-dev-soft); }
+.tone-design { --tone: var(--color-design); --tone-soft: var(--color-design-soft); }
+.tone-marketing { --tone: var(--color-marketing); --tone-soft: var(--color-marketing-soft); }
+
+/* Dark band with soft colour glows and a faint grid */
+.band-night {
+    color: #fff;
+    background:
+        radial-gradient(55% 60% at 88% 0%, rgb(143 230 193 / 0.22), transparent 70%),
+        radial-gradient(45% 55% at 0% 100%, rgb(246 185 59 / 0.16), transparent 70%),
+        linear-gradient(rgb(255 255 255 / 0.035) 1px, transparent 1px) 0 0 / 100% 56px,
+        linear-gradient(90deg, rgb(255 255 255 / 0.035) 1px, transparent 1px) 0 0 / 56px 100%,
+        var(--color-night);
+}
+.band-night h1,
+.band-night h2,
+.band-night h3 {
+    color: #fff;
+}
+
+.text-glow {
+    background: linear-gradient(90deg, var(--color-mint), var(--color-sun));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Card that lifts and picks up its group colour on hover */
+.card-lift {
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.card-lift:hover {
+    transform: translateY(-6px);
+    border-color: var(--tone, var(--color-accent));
+    box-shadow: 0 24px 40px -24px color-mix(in srgb, var(--tone, var(--color-accent)) 55%, transparent);
+}
+
+/* Gentle up-and-down drift for the hero badges */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+.float { animation: float 5s ease-in-out infinite; }
+.float-slow { animation: float 7s ease-in-out -2s infinite; }
+
+/* Team circle: the ring turns, each person turns back so they stay upright */
+@keyframes orbit {
+    to { transform: rotate(360deg); }
+}
+.orbit-ring { animation: orbit 50s linear infinite; }
+.orbit-upright { animation: orbit 50s linear infinite reverse; }
+.orbit:hover .orbit-ring,
+.orbit:hover .orbit-upright,
+.orbit:focus-within .orbit-ring,
+.orbit:focus-within .orbit-upright {
+    animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .float, .float-slow, .orbit-ring, .orbit-upright { animation: none !important; }
+}

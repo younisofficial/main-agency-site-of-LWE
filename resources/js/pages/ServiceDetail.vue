@@ -1,0 +1,101 @@
+<script setup>
+import { computed, watchEffect } from 'vue';
+import ServiceIcon from '../components/ServiceIcon.vue';
+import ServiceCard from '../components/ServiceCard.vue';
+import CallToAction from '../components/CallToAction.vue';
+import { content } from '../lib/api';
+import { categories, site } from '../lib/site';
+import { applySeo, notFoundSeo } from '../lib/seo';
+
+const props = defineProps({ slug: { type: String, required: true } });
+
+const service = computed(() => content.services.find((s) => s.slug === props.slug));
+const related = computed(() =>
+    content.services.filter((s) => s.category === service.value?.category && s.slug !== props.slug),
+);
+const categoryLabel = computed(() => categories.find((c) => c.key === service.value?.category)?.label);
+
+watchEffect(() => {
+    if (service.value) {
+        applySeo({
+            title: `${service.value.title} Services | ${site.name}`,
+            description: `${service.value.summary} ${service.value.description}`.slice(0, 155),
+            path: `/services/${props.slug}`,
+        });
+    } else if (content.ready) {
+        applySeo(notFoundSeo(`/services/${props.slug}`));
+    }
+});
+</script>
+
+<template>
+    <template v-if="service">
+        <section class="section pb-0!" :class="`tone-${service.category}`">
+            <div class="wrap">
+                <nav class="text-muted" aria-label="Breadcrumb">
+                    <RouterLink to="/services" class="link">Services</RouterLink>
+                    <span class="mx-2" aria-hidden="true">/</span>{{ categoryLabel }}
+                </nav>
+
+                <div class="mt-8 grid gap-12 lg:grid-cols-[1.5fr_1fr]">
+                    <div>
+                        <span class="grid size-16 place-items-center rounded-2xl bg-[var(--tone-soft)] text-[var(--tone)]">
+                            <ServiceIcon :name="service.icon" class="size-8" />
+                        </span>
+                        <h1 class="mt-6 text-4xl font-extrabold sm:text-6xl">{{ service.title }}</h1>
+                        <p class="mt-6 max-w-2xl text-xl leading-relaxed text-body">{{ service.description }}</p>
+
+                        <h2 class="mt-12 text-2xl">What you get</h2>
+                        <ul class="mt-5 max-w-2xl space-y-3">
+                            <li v-for="item in service.deliverables" :key="item" class="flex gap-3 rounded-xl border border-line bg-white px-5 py-3.5 font-medium text-ink">
+                                <svg viewBox="0 0 20 20" class="mt-1 size-5 shrink-0 text-[var(--tone)]" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M4 10.5l4 4 8-9" />
+                                </svg>
+                                {{ item }}
+                            </li>
+                        </ul>
+                    </div>
+
+                    <aside class="band-night h-fit rounded-3xl p-7 shadow-[0_30px_60px_-30px_rgba(11,36,31,0.9)] sm:p-8 lg:sticky lg:top-28">
+                        <h2 class="text-2xl">Start this project</h2>
+                        <p class="mt-2 text-white/70">Tell us what you need and get a written quote within one working day.</p>
+                        <dl class="mt-6 border-t border-white/15 pt-5">
+                            <div class="flex justify-between gap-4">
+                                <dt class="text-white/65">Typical timeline</dt>
+                                <dd class="font-semibold">{{ service.timeline }}</dd>
+                            </div>
+                        </dl>
+                        <RouterLink :to="{ path: '/contact', query: { services: service.slug } }" class="btn btn-sun mt-7 w-full">
+                            Get a quote
+                        </RouterLink>
+                        <RouterLink to="/pricing" class="mt-4 block text-center font-semibold text-white underline decoration-white/40 underline-offset-4 hover:text-sun">
+                            See pricing
+                        </RouterLink>
+                    </aside>
+                </div>
+
+                <div v-if="related.length" class="mt-20">
+                    <h2 class="text-2xl">More in {{ categoryLabel?.toLowerCase() }}</h2>
+                    <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        <ServiceCard v-for="item in related" :key="item.slug" :service="item" />
+                    </div>
+                </div>
+            </div>
+        </section>
+        <CallToAction />
+    </template>
+
+    <section v-else-if="content.ready" class="section">
+        <div class="wrap">
+            <h1 class="text-4xl">We do not offer that service</h1>
+            <p class="lead mt-4">The link may be old. Every service we offer is on the services page.</p>
+            <RouterLink to="/services" class="btn btn-primary mt-8">See all services</RouterLink>
+        </div>
+    </section>
+
+    <section v-else class="section">
+        <p class="wrap text-muted" aria-live="polite">
+            {{ content.failed ? 'This page did not load. Check your connection and refresh.' : 'Loading…' }}
+        </p>
+    </section>
+</template>
