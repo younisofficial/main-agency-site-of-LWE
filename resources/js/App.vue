@@ -2,6 +2,7 @@
 import { onMounted } from 'vue';
 import SiteHeader from './components/SiteHeader.vue';
 import SiteFooter from './components/SiteFooter.vue';
+import WhatsAppFloat from './components/WhatsAppFloat.vue';
 import { loadContent } from './lib/api';
 
 onMounted(loadContent);
@@ -16,4 +17,5 @@ onMounted(loadContent);
         <RouterView />
     </main>
     <SiteFooter />
+    <WhatsAppFloat />
 </template>

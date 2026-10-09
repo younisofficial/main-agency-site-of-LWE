@@ -18,8 +18,8 @@ const spot = (index) => {
     <section v-if="lead" class="section overflow-hidden border-t border-line bg-white" aria-labelledby="team-heading">
         <div class="wrap">
             <div class="mx-auto max-w-2xl text-center">
-                <h2 id="team-heading" class="h-section">Meet the team behind your project</h2>
-                <p class="mt-3 text-lg text-body">Developers, designers and marketers who work together on every project.</p>
+                <h2 id="team-heading" class="h-section">Meet our team</h2>
+                <p class="mt-3 text-lg text-body">Real people who will work on your project — from planning to design, website, video and ads.</p>
             </div>
 
             <!-- Phones: a simple grid -->

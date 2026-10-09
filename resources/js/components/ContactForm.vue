@@ -19,7 +19,7 @@ const form = reactive(blank());
 const errors = ref({});
 const status = ref('idle'); // idle | sending | sent | failed
 
-const budgets = ['Under $500', '$500 – $1,500', '$1,500 – $5,000', 'Over $5,000', 'Not sure yet'];
+const budgets = ['Under Rs 15,000', 'Rs 15,000 – 30,000', 'Rs 30,000 – 50,000', 'Above Rs 50,000', 'Not sure yet'];
 
 async function submit() {
     status.value = 'sending';
@@ -45,14 +45,14 @@ function reset() {
 
 <template>
     <div v-if="status === 'sent'" class="rounded-2xl bg-accent-soft p-8" role="status">
-        <h2 class="text-2xl">Message sent</h2>
-        <p class="mt-2 text-body">Thanks, {{ form.name }}. We will reply to {{ form.email }} within one working day.</p>
+        <h2 class="text-2xl">Thank you, {{ form.name }}!</h2>
+        <p class="mt-2 text-body">We got your message. We will call or WhatsApp you on <strong>{{ form.phone }}</strong> within one working day.</p>
         <button type="button" class="btn btn-outline mt-6" @click="reset">Send another message</button>
     </div>
 
     <form v-else class="space-y-6" novalidate @submit.prevent="submit">
         <p v-if="form.plan" class="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg bg-accent-soft px-4 py-3 text-accent-strong">
-            <span>Plan: <strong>{{ form.plan }}</strong></span>
+            <span>Package: <strong>{{ form.plan }}</strong></span>
             <button type="button" class="link cursor-pointer text-sm" @click="form.plan = ''">Remove</button>
         </p>
 
@@ -63,26 +63,26 @@ function reset() {
                 <p v-if="errors.name" class="field-error">{{ errors.name[0] }}</p>
             </div>
             <div>
-                <label for="email" class="field-label">Email</label>
+                <label for="phone" class="field-label">Phone or WhatsApp number</label>
+                <input id="phone" v-model.trim="form.phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0300 1234567" class="field" :aria-invalid="!!errors.phone" />
+                <p v-if="errors.phone" class="field-error">{{ errors.phone[0] }}</p>
+            </div>
+            <div>
+                <label for="email" class="field-label">Email <span class="font-normal text-muted">(optional)</span></label>
                 <input id="email" v-model.trim="form.email" type="email" autocomplete="email" class="field" :aria-invalid="!!errors.email" />
                 <p v-if="errors.email" class="field-error">{{ errors.email[0] }}</p>
             </div>
             <div>
-                <label for="phone" class="field-label">Phone or WhatsApp <span class="font-normal text-muted">(optional)</span></label>
-                <input id="phone" v-model.trim="form.phone" type="tel" autocomplete="tel" class="field" />
-                <p v-if="errors.phone" class="field-error">{{ errors.phone[0] }}</p>
-            </div>
-            <div>
                 <label for="budget" class="field-label">Budget <span class="font-normal text-muted">(optional)</span></label>
                 <select id="budget" v-model="form.budget" class="field">
-                    <option value="">Choose a range</option>
+                    <option value="">Choose your budget</option>
                     <option v-for="budget in budgets" :key="budget">{{ budget }}</option>
                 </select>
             </div>
         </div>
 
         <fieldset>
-            <legend class="field-label">Which services do you need? <span class="font-normal text-muted">(optional)</span></legend>
+            <legend class="field-label">What do you need? <span class="font-normal text-muted">(optional)</span></legend>
             <div class="flex flex-wrap gap-2">
                 <label
                     v-for="service in content.services"
@@ -97,16 +97,16 @@ function reset() {
         </fieldset>
 
         <div>
-            <label for="message" class="field-label">About your project</label>
-            <textarea id="message" v-model.trim="form.message" rows="5" class="field" placeholder="What you want to build, who it is for, and when you need it." :aria-invalid="!!errors.message"></textarea>
+            <label for="message" class="field-label">Your message <span class="font-normal text-muted">(optional)</span></label>
+            <textarea id="message" v-model.trim="form.message" rows="4" class="field" placeholder="For example: I need a website for my school. We have 3 campuses." :aria-invalid="!!errors.message"></textarea>
             <p v-if="errors.message" class="field-error">{{ errors.message[0] }}</p>
         </div>
 
         <p v-if="status === 'failed'" class="rounded-lg bg-red-50 px-4 py-3 font-medium text-red-800" role="alert">
-            Your message was not sent. Check your connection and send it again, or message us on WhatsApp.
+            Your message was not sent. Please check your internet and try again, or message us on WhatsApp.
         </p>
 
-        <button type="submit" class="btn btn-primary disabled:opacity-60" :disabled="status === 'sending'">
+        <button type="submit" class="btn btn-primary btn-lg w-full disabled:opacity-60 sm:w-auto" :disabled="status === 'sending'">
             {{ status === 'sending' ? 'Sending…' : 'Send message' }}
         </button>
     </form>

@@ -13,6 +13,8 @@ const paths = {
     megaphone: 'M4 10v4h3l8 4V6l-8 4zM18 9.5a3.5 3.5 0 010 5M8 14.5l1 4.5h2.5',
     document: 'M7 3h7l4 4v14H7zM14 3v4h4M10 12h5M10 16h5',
     chart: 'M4 20V4M4 20h16M8 16v-4M12 16V8M16 16v-6',
+    school: 'M3 9l9-5 9 5-9 5zM7 11.2V16c0 1.5 2.2 3 5 3s5-1.5 5-3v-4.8M21 9v6',
+    video: 'M4 6h11v12H4zM15 10.5l5-3v9l-5-3',
 };
 </script>
 

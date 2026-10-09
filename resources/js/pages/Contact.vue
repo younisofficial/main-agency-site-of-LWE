@@ -1,39 +1,51 @@
 <script setup>
 import PageHero from '../components/PageHero.vue';
 import ContactForm from '../components/ContactForm.vue';
-import { site, whatsappLink } from '../lib/site';
+import ChatIcon from '../components/ChatIcon.vue';
+import PhoneIcon from '../components/PhoneIcon.vue';
+import { site, whatsappLink, phoneLink } from '../lib/site';
 </script>
 
 <template>
-    <PageHero title="Get a free quote" text="Tell us about your project. We reply within one working day." />
+    <PageHero title="Contact us" text="The fastest way is WhatsApp. You can also call us, or fill the short form and we will call you back.">
+        <div class="mt-8 flex flex-wrap gap-3">
+            <a :href="whatsappLink()" target="_blank" rel="noopener" class="btn btn-whatsapp btn-lg">
+                <ChatIcon class="size-6" /> WhatsApp us
+            </a>
+            <a :href="phoneLink()" class="btn btn-ghost btn-lg">
+                <PhoneIcon class="size-5" /> Call {{ site.phone }}
+            </a>
+        </div>
+    </PageHero>
 
     <section class="section">
         <div class="wrap grid gap-14 lg:grid-cols-[1.6fr_1fr]">
             <div class="rounded-3xl border border-line bg-white p-6 sm:p-9">
+                <h2 class="text-2xl">Send us a message</h2>
+                <p class="mb-7 mt-1 text-body">Only your name and phone number are needed.</p>
                 <ContactForm />
             </div>
 
-            <aside class="band-night h-fit rounded-3xl p-7 sm:p-8">
-                <h2 class="text-2xl">Prefer to talk?</h2>
+            <aside class="h-fit rounded-3xl border border-line bg-surface p-7 sm:p-8">
+                <h2 class="text-2xl">Our details</h2>
                 <dl class="mt-6 space-y-5">
                     <div>
-                        <dt class="text-sm font-semibold text-mint">Phone</dt>
-                        <dd><a :href="`tel:${site.phone.replace(/\s/g, '')}`" class="font-semibold underline decoration-white/40 underline-offset-4 hover:text-sun">{{ site.phone }}</a></dd>
+                        <dt class="text-sm font-semibold text-muted">Phone and WhatsApp</dt>
+                        <dd><a :href="phoneLink()" class="link">{{ site.phone }}</a></dd>
+                    </div>
+                    <div v-if="site.email">
+                        <dt class="text-sm font-semibold text-muted">Email</dt>
+                        <dd><a :href="`mailto:${site.email}`" class="link">{{ site.email }}</a></dd>
                     </div>
                     <div>
-                        <dt class="text-sm font-semibold text-mint">Email</dt>
-                        <dd><a :href="`mailto:${site.email}`" class="font-semibold underline decoration-white/40 underline-offset-4 hover:text-sun">{{ site.email }}</a></dd>
+                        <dt class="text-sm font-semibold text-muted">Office</dt>
+                        <dd class="text-ink">{{ site.address }}</dd>
                     </div>
                     <div>
-                        <dt class="text-sm font-semibold text-mint">Office</dt>
-                        <dd>{{ site.address }}</dd>
-                    </div>
-                    <div>
-                        <dt class="text-sm font-semibold text-mint">Hours</dt>
-                        <dd>{{ site.hours }}</dd>
+                        <dt class="text-sm font-semibold text-muted">Timings</dt>
+                        <dd class="text-ink">{{ site.hours }}</dd>
                     </div>
                 </dl>
-                <a :href="whatsappLink()" target="_blank" rel="noopener" class="btn btn-sun mt-8 w-full">Chat on WhatsApp</a>
             </aside>
         </div>
     </section>

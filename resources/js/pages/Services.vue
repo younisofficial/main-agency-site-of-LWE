@@ -6,8 +6,8 @@ import CallToAction from '../components/CallToAction.vue';
 
 <template>
     <PageHero
-        title="Services"
-        text="Everything a business needs to get online and grow there. Open any service to see what is included, how long it takes and what it costs."
+        title="Our services"
+        text="Websites, design, video and ads — all from one team. Tap a service to see what you get."
     />
     <section class="section pb-0!">
         <div class="wrap">

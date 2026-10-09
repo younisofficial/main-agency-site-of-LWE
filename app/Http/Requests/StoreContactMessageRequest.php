@@ -15,13 +15,13 @@ class StoreContactMessageRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:120'],
-            'email' => ['required', 'email', 'max:160'],
-            'phone' => ['nullable', 'string', 'max:30'],
+            'email' => ['nullable', 'email', 'max:160'],
+            'phone' => ['required', 'string', 'min:10', 'max:30'],
             'services' => ['nullable', 'array', 'max:10'],
             'services.*' => ['string', 'exists:services,slug'],
             'plan' => ['nullable', 'string', 'max:120'],
             'budget' => ['nullable', 'string', 'max:60'],
-            'message' => ['required', 'string', 'min:10', 'max:3000'],
+            'message' => ['nullable', 'string', 'max:3000'],
         ];
     }
 
@@ -29,10 +29,9 @@ class StoreContactMessageRequest extends FormRequest
     {
         return [
             'name.required' => 'Enter your name.',
-            'email.required' => 'Enter your email address.',
+            'phone.required' => 'Enter your phone or WhatsApp number.',
+            'phone.min' => 'Enter a full phone number, like 0300 1234567.',
             'email.email' => 'Enter a valid email address, like name@example.com.',
-            'message.required' => 'Tell us a little about your project.',
-            'message.min' => 'Add a bit more detail — at least 10 characters.',
         ];
     }
 }

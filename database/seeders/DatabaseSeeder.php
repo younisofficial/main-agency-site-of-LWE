@@ -8,16 +8,20 @@ use App\Models\Service;
 use Illuminate\Database\Seeder;
 
 /**
- * All website content lives here. Edit the text or prices, then run:
- *   php artisan migrate:fresh --seed
+ * All website content lives here: services, prices and recent work.
+ * Edit the text or prices, then run:
+ *   php artisan db:seed
  *
- * Plan prices are in US dollars and are DUMMY figures — replace them with your own.
+ * Prices are in Pakistani Rupees (PKR).
+ * 'price' = lowest price, 'price_max' = highest price. Leave 'price_max' out for one fixed price.
  */
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        foreach ($this->services() as $i => $service) {
+        $services = $this->services();
+        Service::whereNotIn('slug', array_column($services, 'slug'))->delete();
+        foreach ($services as $i => $service) {
             Service::updateOrCreate(['slug' => $service['slug']], $service + ['sort_order' => $i]);
         }
 
@@ -32,161 +36,160 @@ class DatabaseSeeder extends Seeder
         }
     }
 
+    /**
+     * Services. 'category' sets the colour: development (green), design (orange), marketing (red).
+     * Icons: code, wordpress, school, phone, pen, video, search, megaphone, chart.
+     */
     private function services(): array
     {
         return [
             [
-                'slug' => 'custom-web-development',
-                'title' => 'Custom web development',
+                'slug' => 'website-development',
+                'title' => 'Business website',
                 'category' => 'development',
                 'icon' => 'code',
-                'summary' => 'Web apps, portals and dashboards built around how your business actually works.',
-                'description' => 'When a template cannot do the job, we build it from scratch in Laravel and Vue. You get a fast, secure system that fits your process — booking engines, customer portals, inventory tools, admin dashboards — and code your next developer can read.',
-                'deliverables' => ['Requirements and technical plan', 'Laravel back end with Vue front end', 'Admin panel for your team', 'Payment and third-party integrations', 'Deployment and 30 days of support'],
-                'timeline' => '4–8 weeks',
+                'summary' => 'A website for your shop, company, clinic or restaurant, so customers can find and contact you.',
+                'description' => 'We make a fast website that works on every mobile phone. Customers can see your work, prices and location, and contact you on WhatsApp in one click. You get an easy admin panel to change text and photos yourself.',
+                'deliverables' => ['Works on mobile and computer', 'WhatsApp and call buttons', 'Contact form', 'Google Map of your location', 'Basic Google SEO', 'Free support after launch'],
+                'timeline' => '7–14 days',
             ],
             [
-                'slug' => 'wordpress-development',
-                'title' => 'WordPress development',
+                'slug' => 'school-websites',
+                'title' => 'School website',
+                'category' => 'development',
+                'icon' => 'school',
+                'summary' => 'A website for your school, college or academy with admissions, gallery and contact details.',
+                'description' => 'Parents want to see your school before they visit. We make a simple website with your classes, teachers, photos, admission details and fee information. Parents can call or WhatsApp you straight from the website.',
+                'deliverables' => ['Admission information and form', 'Photo gallery', 'Classes and teachers pages', 'News and events', 'WhatsApp and call buttons', 'Google Map of your campus'],
+                'timeline' => '3 days – 4 weeks',
+            ],
+            [
+                'slug' => 'wordpress-websites',
+                'title' => 'WordPress and online store',
                 'category' => 'development',
                 'icon' => 'wordpress',
-                'summary' => 'Business sites and WooCommerce stores you can update yourself, without calling a developer.',
-                'description' => 'We build WordPress sites that stay fast and stay yours. Custom themes instead of bloated page-builder stacks, WooCommerce set up with local payment gateways, and a short training session so your team can add pages, posts and products on day one.',
-                'deliverables' => ['Custom or customised theme', 'WooCommerce store setup', 'Speed and security hardening', 'Plugin setup and migration', 'Training session for your team'],
-                'timeline' => '1–3 weeks',
-            ],
-            [
-                'slug' => 'app-development',
-                'title' => 'App development',
-                'category' => 'development',
-                'icon' => 'phone',
-                'summary' => 'Android and iOS apps from one codebase, published to both stores.',
-                'description' => 'We design and build mobile apps with Flutter, so one codebase runs on Android and iOS. We handle the API, push notifications, in-app payments and the store submissions — you get a published app and the source code.',
-                'deliverables' => ['Android and iOS app', 'API and admin panel', 'Push notifications', 'Play Store and App Store submission', 'Source code handover'],
-                'timeline' => '8–12 weeks',
-            ],
-            [
-                'slug' => 'web-design',
-                'title' => 'Web design',
-                'category' => 'design',
-                'icon' => 'layout',
-                'summary' => 'Page designs that make it obvious what you do and what to click next.',
-                'description' => 'We design the pages before anyone writes code: the layout, the type, the photography and the words on the buttons. You review real mockups on desktop and mobile, ask for changes, and sign off a design your developers can build exactly.',
-                'deliverables' => ['Homepage and inner page designs', 'Desktop and mobile layouts', 'Two rounds of revisions', 'Figma source files', 'Developer handover notes'],
-                'timeline' => '1–2 weeks',
-            ],
-            [
-                'slug' => 'ux-ui-design',
-                'title' => 'UX/UI design',
-                'category' => 'design',
-                'icon' => 'cursor',
-                'summary' => 'Flows and screens for apps and software, tested with real users before you build.',
-                'description' => 'For products with more than a few screens. We map what your users are trying to do, sketch the flows, build a clickable prototype and test it with five real people. Problems get fixed in Figma, where changes cost minutes, not in code.',
-                'deliverables' => ['User flows and wireframes', 'Clickable prototype', 'Usability test with five users', 'Component library in Figma', 'Design system documentation'],
+                'summary' => 'Sell your products online with a WordPress or WooCommerce store you can manage yourself.',
+                'description' => 'We set up your online store with products, cart and order system. Customers can pay online or choose cash on delivery. We show you how to add products and check orders yourself.',
+                'deliverables' => ['Product pages and cart', 'Cash on delivery and online payment', 'Order emails', 'Speed and security setup', 'Training on how to add products'],
                 'timeline' => '2–4 weeks',
             ],
             [
+                'slug' => 'mobile-apps',
+                'title' => 'Mobile app',
+                'category' => 'development',
+                'icon' => 'phone',
+                'summary' => 'An Android and iPhone app for your business, with an admin panel to manage it.',
+                'description' => 'We make mobile apps for orders, bookings, schools and businesses. We plan the app with you first, show you the design, then build it and help you put it on Google Play and the App Store.',
+                'deliverables' => ['Android and iPhone app', 'Admin panel', 'Login and notifications', 'Play Store and App Store upload', 'Support after launch'],
+                'timeline' => '4–8 weeks',
+            ],
+            [
                 'slug' => 'graphic-design',
-                'title' => 'Graphic design',
+                'title' => 'Logo and graphic design',
                 'category' => 'design',
                 'icon' => 'pen',
-                'summary' => 'Logos, brand kits, social posts and print — one consistent look everywhere.',
-                'description' => 'From a first logo to a full brand kit. We design the pieces your business uses every week — social media posts, brochures, company profiles, packaging and banners — so they all look like they come from the same company.',
-                'deliverables' => ['Logo and brand guidelines', 'Social media post templates', 'Brochure and company profile', 'Print-ready files', 'Editable source files'],
-                'timeline' => '3–7 days',
+                'summary' => 'Logo, social media posts, banners, flyers and visiting cards that make your business look professional.',
+                'description' => 'A good logo and clean designs make people trust your business. We design your logo, Facebook and Instagram posts, banners, flyers and visiting cards in your brand colours, ready to print or post.',
+                'deliverables' => ['Logo design', 'Social media posts', 'Banners and flyers', 'Visiting cards', 'Print-ready files'],
+                'timeline' => '2–7 days',
+            ],
+            [
+                'slug' => 'video-editing',
+                'title' => 'Video editing',
+                'category' => 'design',
+                'icon' => 'video',
+                'summary' => 'Reels, TikTok and YouTube videos and video ads, edited to look clean and catch attention.',
+                'description' => 'Send us your raw videos and we turn them into short reels, YouTube videos or video ads. We add text, music, your logo and subtitles, in the right size for each platform.',
+                'deliverables' => ['Reels and TikTok videos', 'YouTube videos', 'Video ads', 'Text, music and subtitles', 'Your logo on every video'],
+                'timeline' => '1–3 days per video',
             ],
             [
                 'slug' => 'seo',
-                'title' => 'SEO',
+                'title' => 'SEO (Google ranking)',
                 'category' => 'marketing',
                 'icon' => 'search',
-                'summary' => 'Rank for the searches your customers make, and see the numbers every month.',
-                'description' => 'We start with an audit that shows what is holding your site back, then fix it: technical issues, page content, local listings and links. Every month you get a plain report — which keywords moved, how much traffic came in, and what we do next.',
-                'deliverables' => ['Technical and content audit', 'Keyword research', 'On-page optimisation', 'Google Business Profile setup', 'Monthly ranking report'],
+                'summary' => 'Help people find your business when they search on Google.',
+                'description' => 'We set up your Google Business Profile, fix your website for Google and write content for the words your customers search. You get a simple monthly report showing what changed.',
+                'deliverables' => ['Google Business Profile setup', 'Website SEO fixes', 'Keyword research', 'Content for your pages', 'Monthly report'],
                 'timeline' => 'Monthly',
             ],
             [
-                'slug' => 'advertising',
-                'title' => 'Advertising',
+                'slug' => 'facebook-google-ads',
+                'title' => 'Facebook and Google ads',
                 'category' => 'marketing',
                 'icon' => 'megaphone',
-                'summary' => 'Google, Facebook and Instagram ads managed against one number: cost per lead.',
-                'description' => 'We plan, write, design and manage paid campaigns on Google, Meta and TikTok. Conversion tracking goes in first, so every dollar is tied to a call, a form or a sale. You see spend and results in a live dashboard.',
-                'deliverables' => ['Campaign strategy and setup', 'Ad copy and creatives', 'Conversion tracking', 'Weekly optimisation', 'Live results dashboard'],
+                'summary' => 'Ads on Facebook, Instagram, TikTok and Google that bring messages and calls to your business.',
+                'description' => 'We make the ad designs, choose the right people in the right cities and manage your ads every day. You only pay the ad budget to Facebook or Google and our fee to us.',
+                'deliverables' => ['Ad designs and text', 'Right audience and cities', 'Daily ad checking', 'WhatsApp and call leads', 'Simple weekly report'],
                 'timeline' => 'Monthly',
             ],
             [
-                'slug' => 'content-writing',
-                'title' => 'Content writing',
-                'category' => 'marketing',
-                'icon' => 'document',
-                'summary' => 'Website copy, blogs and product descriptions in clear English or Urdu.',
-                'description' => 'Writers who learn your business before they write about it. Website pages that explain what you do in plain words, blog articles written to rank, and product descriptions that answer the questions buyers actually ask.',
-                'deliverables' => ['Website page copy', 'SEO blog articles', 'Product descriptions', 'English and Urdu', 'One round of edits included'],
-                'timeline' => '2–5 days',
-            ],
-            [
-                'slug' => 'digital-marketing',
-                'title' => 'Marketing',
+                'slug' => 'social-media-marketing',
+                'title' => 'Social media management',
                 'category' => 'marketing',
                 'icon' => 'chart',
-                'summary' => 'Social media, email and WhatsApp campaigns run as one monthly plan.',
-                'description' => 'A full marketing plan run by one team. We manage your social pages, send email and WhatsApp campaigns, and plan each month around what you are selling. One calendar, one report, one person to call.',
-                'deliverables' => ['Monthly content calendar', 'Social media management', 'Email and WhatsApp campaigns', 'Community replies', 'Monthly performance report'],
+                'summary' => 'We run your Facebook, Instagram and TikTok pages with regular posts and replies.',
+                'description' => 'We plan your posts for the month, design them, post them on time and help you reply to customers. Your pages stay active and look professional.',
+                'deliverables' => ['Monthly post plan', 'Post designs', 'Posting on time', 'Page setup and cover photos', 'Monthly report'],
                 'timeline' => 'Monthly',
             ],
-        ];
-    }
-
-    private function plans(): array
-    {
-        return [
-            // Development
-            ['category' => 'development', 'name' => 'Starter site', 'best_for' => 'New businesses that need to be online this month', 'price' => 499, 'billing' => 'one-time',
-                'features' => ['Up to 5 pages on WordPress', 'Mobile-friendly design', 'Contact form and WhatsApp button', 'Basic on-page SEO', '2 weeks of support']],
-            ['category' => 'development', 'name' => 'Business site', 'best_for' => 'Growing companies and online stores', 'price' => 1499, 'billing' => 'one-time', 'is_popular' => true,
-                'features' => ['Up to 15 pages, custom design', 'WooCommerce store or blog', 'Payment gateway integration', 'Speed and security setup', 'Team training session', '30 days of support']],
-            ['category' => 'development', 'name' => 'Custom build', 'best_for' => 'Web apps, portals and mobile apps', 'price' => 3999, 'billing' => 'one-time',
-                'features' => ['Laravel and Vue web app or Flutter app', 'Custom admin dashboard', 'API and third-party integrations', 'Dedicated project manager', 'Source code handover', '60 days of support']],
-
-            // Design
-            ['category' => 'design', 'name' => 'Brand basics', 'best_for' => 'A logo and the essentials', 'price' => 199, 'billing' => 'one-time',
-                'features' => ['3 logo concepts', 'Colour palette and fonts', 'Business card design', '2 rounds of revisions', 'Print-ready and source files']],
-            ['category' => 'design', 'name' => 'Website design', 'best_for' => 'A full site designed before it is built', 'price' => 799, 'billing' => 'one-time', 'is_popular' => true,
-                'features' => ['Homepage and up to 8 inner pages', 'Desktop and mobile layouts', 'Clickable Figma prototype', '3 rounds of revisions', 'Developer handover notes']],
-            ['category' => 'design', 'name' => 'Product UX/UI', 'best_for' => 'Apps and software with many screens', 'price' => 1999, 'billing' => 'one-time',
-                'features' => ['User flows and wireframes', 'Up to 40 designed screens', 'Usability test with 5 users', 'Component library', 'Design system documentation']],
-
-            // Marketing
-            ['category' => 'marketing', 'name' => 'Local', 'best_for' => 'Shops and services in one city', 'price' => 349, 'billing' => 'per month',
-                'features' => ['SEO for 10 keywords', 'Google Business Profile management', '8 social media posts', '2 blog articles', 'Monthly report']],
-            ['category' => 'marketing', 'name' => 'Growth', 'best_for' => 'Businesses ready to run ads', 'price' => 749, 'billing' => 'per month', 'is_popular' => true,
-                'features' => ['SEO for 25 keywords', 'Google and Meta ad management', '16 social media posts', '4 blog articles', 'Conversion tracking', 'Fortnightly review call']],
-            ['category' => 'marketing', 'name' => 'Full team', 'best_for' => 'Brands that want marketing fully handled', 'price' => 1499, 'billing' => 'per month',
-                'features' => ['SEO for 50 keywords', 'Ads on Google, Meta and TikTok', 'Daily social media posts', 'Email and WhatsApp campaigns', '8 blog articles', 'Dedicated account manager']],
         ];
     }
 
     /**
-     * Portfolio. These nine are DUMMY projects with placeholder images.
-     * Replace each one with a real site you worked on:
-     *   1. Put a screenshot in public/images/portfolio/ (1200x900 looks best).
-     *   2. Set 'image' to its path, 'url' to the live site, and edit the text.
-     *   3. Run: php artisan db:seed
+     * Prices on the pricing page.
+     * 'category' = which table the package shows in: business or school.
+     * 'is_popular' => true puts a "Most chosen" badge on that package.
+     */
+    private function plans(): array
+    {
+        return [
+            // Business websites
+            ['category' => 'business', 'name' => 'Basic', 'best_for' => 'Small shop or new business', 'price' => 12000, 'price_max' => 15000, 'billing' => 'one-time',
+                'features' => ['Up to 5 pages', 'Works on mobile and computer', 'WhatsApp and call buttons', 'Contact form', 'Google Map of your location', 'Ready in about 7 days', '1 month free support']],
+            ['category' => 'business', 'name' => 'Standard', 'best_for' => 'Business that wants more customers', 'price' => 25000, 'price_max' => 30000, 'billing' => 'one-time', 'is_popular' => true,
+                'features' => ['Up to 10 pages', 'Everything in Basic', 'Admin panel: change text and photos yourself', 'Basic Google SEO setup', 'Facebook and Instagram links', 'Ready in about 10–14 days', '3 months free support']],
+            ['category' => 'business', 'name' => 'Premium', 'best_for' => 'Online store or special features', 'price' => 40000, 'price_max' => 45000, 'billing' => 'one-time',
+                'features' => ['15+ pages or an online store', 'Everything in Standard', 'Products, cart and orders', 'Cash on delivery or online payment', 'Speed and security setup', 'Ready in about 3–4 weeks', '6 months free support']],
+
+            // School websites
+            ['category' => 'school', 'name' => 'Landing page', 'best_for' => 'One page about your school', 'price' => 7000, 'billing' => 'one-time',
+                'features' => ['1 page', 'School introduction and photos', '"Admissions open" section', 'WhatsApp and call buttons', 'Google Map of your campus', 'Ready in about 3–5 days']],
+            ['category' => 'school', 'name' => '3-page website', 'best_for' => 'Small school or academy', 'price' => 12000, 'billing' => 'one-time',
+                'features' => ['3 pages: Home, About, Contact', 'Admission information', 'Photo gallery', 'WhatsApp and call buttons', 'Ready in about 7 days']],
+            ['category' => 'school', 'name' => '5–7 page website', 'best_for' => 'Growing school', 'price' => 25000, 'price_max' => 30000, 'billing' => 'one-time', 'is_popular' => true,
+                'features' => ['5 to 7 pages', 'Admissions, classes, teachers, gallery', 'Online admission form', 'News and events', 'Change text and photos yourself', 'Ready in about 2 weeks']],
+            ['category' => 'school', 'name' => '10+ page website', 'best_for' => 'Big school or school system', 'price' => 40000, 'price_max' => 45000, 'billing' => 'one-time',
+                'features' => ['10 or more pages', 'Everything in 5–7 pages', 'Results and fee structure pages', 'Downloads: date sheet, syllabus', 'Campus and teacher pages', 'Ready in about 3–4 weeks']],
+        ];
+    }
+
+    /**
+     * Recent work. Screenshots are in public/images/portfolio/ (2:1 size looks best, e.g. 1300x650).
+     * Add 'url' => 'https://...' to make a card open the live website.
      * 'is_featured' => true shows the project on the homepage (first three are used).
      */
     private function projects(): array
     {
         return [
-            ['title' => 'Online fashion store', 'category' => 'development', 'client' => 'Sample client', 'summary' => 'WooCommerce store with local payment gateways and a faster checkout.', 'image' => '/images/portfolio/sample-1.svg', 'url' => null, 'tags' => ['WordPress', 'WooCommerce'], 'is_featured' => true],
-            ['title' => 'Food delivery app', 'category' => 'design', 'client' => 'Sample client', 'summary' => 'Ordering flow and 32 app screens, tested with real customers.', 'image' => '/images/portfolio/sample-2.svg', 'url' => null, 'tags' => ['UX/UI', 'Mobile app'], 'is_featured' => true],
-            ['title' => 'Clinic growth campaign', 'category' => 'marketing', 'client' => 'Sample client', 'summary' => 'Local SEO and Google Ads to fill the appointment calendar.', 'image' => '/images/portfolio/sample-3.svg', 'url' => null, 'tags' => ['SEO', 'Google Ads'], 'is_featured' => true],
-            ['title' => 'School management portal', 'category' => 'development', 'client' => 'Sample client', 'summary' => 'Fees, attendance and results in one Laravel and Vue web app.', 'image' => '/images/portfolio/sample-4.svg', 'url' => null, 'tags' => ['Laravel', 'Vue', 'Dashboard']],
-            ['title' => 'Beauty brand identity', 'category' => 'design', 'client' => 'Sample client', 'summary' => 'Logo, packaging and a social media kit for a new skincare line.', 'image' => '/images/portfolio/sample-5.svg', 'url' => null, 'tags' => ['Branding', 'Graphic design']],
-            ['title' => 'Real estate lead engine', 'category' => 'marketing', 'client' => 'Sample client', 'summary' => 'Meta ads, landing pages and WhatsApp follow-ups for a property developer.', 'image' => '/images/portfolio/sample-6.svg', 'url' => null, 'tags' => ['Meta Ads', 'WhatsApp']],
-            ['title' => 'Restaurant website', 'category' => 'development', 'client' => 'Sample client', 'summary' => 'Menu, table booking and online ordering on a custom WordPress theme.', 'image' => '/images/portfolio/sample-7.svg', 'url' => null, 'tags' => ['WordPress', 'Booking']],
-            ['title' => 'Organic grocery redesign', 'category' => 'design', 'client' => 'Sample client', 'summary' => 'A cleaner storefront design that makes reordering take two taps.', 'image' => '/images/portfolio/sample-8.svg', 'url' => null, 'tags' => ['Web design', 'E-commerce']],
-            ['title' => 'SaaS content programme', 'category' => 'marketing', 'client' => 'Sample client', 'summary' => 'Blog articles and email sequences written to rank and convert.', 'image' => '/images/portfolio/sample-9.svg', 'url' => null, 'tags' => ['Content writing', 'Email']],
+            ['title' => 'Digital skills training platform', 'category' => 'development', 'client' => 'Learning With Earning',
+                'summary' => 'Website for a digital skills training institute, with courses, student results, login and registration.',
+                'image' => '/images/portfolio/learning-with-earning.webp', 'tags' => ['Education', 'Student login', 'Courses'], 'is_featured' => true],
+            ['title' => 'Online store for mobile accessories', 'category' => 'development', 'client' => 'OneTechSmart',
+                'summary' => 'Online store with product pages, discounts, prices in rupees and quick "Buy Now" buttons.',
+                'image' => '/images/portfolio/onetechsmart.webp', 'tags' => ['Online store', 'Products', 'Rupee prices'], 'is_featured' => true],
+            ['title' => 'Restaurant software website', 'category' => 'development', 'client' => 'RestroManage',
+                'summary' => 'Website for restaurant management software, with features, pricing and a free trial sign-up.',
+                'image' => '/images/portfolio/restromanage.webp', 'tags' => ['Software', 'Free trial', 'Restaurants'], 'is_featured' => true],
+            ['title' => 'Mentor finding platform', 'category' => 'development', 'client' => 'LWE MentorNet',
+                'summary' => 'Students find verified mentors across Pakistan, see their profiles and send a request in one click.',
+                'image' => '/images/portfolio/lwe-mentornet.webp', 'tags' => ['Education', 'Profiles', 'Requests']],
+            ['title' => 'IT company website', 'category' => 'development', 'client' => 'NetOPZ',
+                'summary' => 'Website for an IT company offering domain and hosting, design, development and marketing.',
+                'image' => '/images/portfolio/netopz.webp', 'tags' => ['Company website', 'Services', 'Quote form']],
+            ['title' => 'International company website', 'category' => 'development', 'client' => 'ZAHA Global',
+                'summary' => 'Company website for a group working in Germany, Australia and Pakistan, in English and German.',
+                'image' => '/images/portfolio/zaha-global.webp', 'tags' => ['Corporate', 'Two languages']],
         ];
     }
 }

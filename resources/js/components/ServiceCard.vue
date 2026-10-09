@@ -26,7 +26,7 @@ defineProps({ service: { type: Object, required: true } });
         <span class="mt-2 block grow text-[0.95rem] leading-relaxed text-body">{{ service.summary }}</span>
 
         <span class="mt-6 flex items-center justify-between border-t border-line pt-4">
-            <span class="text-sm font-bold text-[var(--tone)]">View details</span>
+            <span class="text-sm font-bold text-[var(--tone)]">See details</span>
             <span class="grid size-10 place-items-center rounded-full bg-surface text-ink transition-all duration-300 group-hover:translate-x-1 group-hover:bg-[var(--tone)] group-hover:text-white" aria-hidden="true">
                 <svg viewBox="0 0 20 20" class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M5 10h10M11 6l4 4-4 4" />

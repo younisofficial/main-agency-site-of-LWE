@@ -4,7 +4,8 @@ import ServiceIcon from '../components/ServiceIcon.vue';
 import ServiceCard from '../components/ServiceCard.vue';
 import CallToAction from '../components/CallToAction.vue';
 import { content } from '../lib/api';
-import { categories, site } from '../lib/site';
+import { categories, site, whatsappLink } from '../lib/site';
+import ChatIcon from '../components/ChatIcon.vue';
 import { applySeo, notFoundSeo } from '../lib/seo';
 
 const props = defineProps({ slug: { type: String, required: true } });
@@ -57,19 +58,20 @@ watchEffect(() => {
                     </div>
 
                     <aside class="band-night h-fit rounded-3xl p-7 shadow-[0_30px_60px_-30px_rgba(11,36,31,0.9)] sm:p-8 lg:sticky lg:top-28">
-                        <h2 class="text-2xl">Start this project</h2>
-                        <p class="mt-2 text-white/70">Tell us what you need and get a written quote within one working day.</p>
+                        <h2 class="text-2xl">Want this service?</h2>
+                        <p class="mt-2 text-white/75">Send us a WhatsApp message. We will tell you the price and time.</p>
                         <dl class="mt-6 border-t border-white/15 pt-5">
                             <div class="flex justify-between gap-4">
-                                <dt class="text-white/65">Typical timeline</dt>
+                                <dt class="text-white/65">Time needed</dt>
                                 <dd class="font-semibold">{{ service.timeline }}</dd>
                             </div>
                         </dl>
-                        <RouterLink :to="{ path: '/contact', query: { services: service.slug } }" class="btn btn-sun mt-7 w-full">
-                            Get a quote
-                        </RouterLink>
-                        <RouterLink to="/pricing" class="mt-4 block text-center font-semibold text-white underline decoration-white/40 underline-offset-4 hover:text-sun">
-                            See pricing
+                        <a :href="whatsappLink(`Assalam o Alaikum! I want ${service.title}. Please tell me the price.`)" target="_blank" rel="noopener" class="btn btn-whatsapp mt-7 w-full">
+                            <ChatIcon class="size-5" /> Ask on WhatsApp
+                        </a>
+                        <RouterLink to="/pricing" class="btn btn-ghost mt-3 w-full">See our prices</RouterLink>
+                        <RouterLink :to="{ path: '/contact', query: { services: service.slug } }" class="mt-4 block text-center font-semibold text-white underline decoration-white/40 underline-offset-4 hover:text-sun">
+                            or fill a short form
                         </RouterLink>
                     </aside>
                 </div>
