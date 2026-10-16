@@ -34,10 +34,13 @@ const half = computed(() => Math.ceil(content.services.length / 2));
                 <h2 class="font-sans text-base font-bold tracking-normal text-mint!">Contact</h2>
                 <ul class="mt-4 space-y-2.5 text-white/80">
                     <li><a :href="phoneLink()" class="hover:text-sun">{{ site.phone }}</a></li>
-                    <li><a :href="`mailto:${site.email}`" class="hover:text-sun">{{ site.email }}</a></li>
                     <li>{{ site.address }}</li>
                     <li>{{ site.hours }}</li>
                 </ul>
+                <RouterLink to="/services/pharmacy-websites" class="mt-6 block rounded-xl border border-sun/40 bg-white/5 px-4 py-3 text-white/90 hover:border-sun">
+                    <span class="block font-bold text-sun">Need a pharmacy website?</span>
+                    We make those too. Tap to see details.
+                </RouterLink>
             </div>
         </div>
 
@@ -47,8 +50,10 @@ const half = computed(() => Math.ceil(content.services.length / 2));
                 <nav class="flex flex-wrap gap-6" aria-label="Footer">
                     <RouterLink to="/portfolio" class="hover:text-white">Our work</RouterLink>
                     <RouterLink to="/pricing" class="hover:text-white">Prices</RouterLink>
+                    <RouterLink to="/solutions" class="hover:text-white">Solutions</RouterLink>
                     <RouterLink to="/about" class="hover:text-white">About us</RouterLink>
                     <RouterLink to="/contact" class="hover:text-white">Contact</RouterLink>
+                    <a href="/admin/login" class="hover:text-white">Admin login</a>
                 </nav>
             </div>
         </div>

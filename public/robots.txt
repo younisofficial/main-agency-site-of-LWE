@@ -1,2 +1,6 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /api/
+Disallow: /admin
+
+Sitemap: https://growmiotech.com/sitemap.xml

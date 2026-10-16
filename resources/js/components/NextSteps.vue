@@ -2,6 +2,7 @@
 import ChatIcon from './ChatIcon.vue';
 import PhoneIcon from './PhoneIcon.vue';
 import { site, whatsappLink, phoneLink } from '../lib/site';
+import { cycle } from '../lib/reveal';
 
 defineProps({
     title: { type: String, default: 'How to start — 3 easy steps' },
@@ -10,17 +11,17 @@ defineProps({
 const steps = [
     { title: 'Choose a package', text: 'Look at our prices. Not sure which one? Just ask us — we will help you choose.' },
     { title: 'Send us a WhatsApp message', text: 'Tell us your business name and what you need. Or call us. We reply within one working day.' },
-    { title: 'Pay 50% and we start', text: 'Pay half to start. Pay the other half when your work is ready and you are happy.' },
+    { title: 'Get your website fast', text: 'We start work right away. Small websites are ready in a few days, and we tell you the date before we start.' },
 ];
 </script>
 
 <template>
     <section class="section band-night" aria-labelledby="steps-heading">
         <div class="wrap">
-            <h2 id="steps-heading" class="h-section max-w-2xl">{{ title }}</h2>
+            <h2 id="steps-heading" v-reveal="'down'" class="h-section max-w-2xl">{{ title }}</h2>
 
             <ol class="mt-10 grid gap-5 md:grid-cols-3">
-                <li v-for="(step, index) in steps" :key="step.title" class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                <li v-for="(step, index) in steps" :key="step.title" v-reveal="cycle(index, 140)" class="rounded-2xl border border-white/10 bg-white/5 p-6">
                     <span class="grid size-12 place-items-center rounded-full bg-sun font-display text-2xl font-extrabold text-night" aria-hidden="true">
                         {{ index + 1 }}
                     </span>
@@ -31,7 +32,7 @@ const steps = [
                 </li>
             </ol>
 
-            <div class="mt-10 flex flex-wrap gap-3">
+            <div v-reveal="{ dir: 'up', delay: 200 }" class="mt-10 flex flex-wrap gap-3">
                 <a :href="whatsappLink()" target="_blank" rel="noopener" class="btn btn-whatsapp btn-lg">
                     <ChatIcon class="size-6" /> Message us on WhatsApp
                 </a>

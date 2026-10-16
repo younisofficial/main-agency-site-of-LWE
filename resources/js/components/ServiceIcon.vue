@@ -15,6 +15,12 @@ const paths = {
     chart: 'M4 20V4M4 20h16M8 16v-4M12 16V8M16 16v-6',
     school: 'M3 9l9-5 9 5-9 5zM7 11.2V16c0 1.5 2.2 3 5 3s5-1.5 5-3v-4.8M21 9v6',
     video: 'M4 6h11v12H4zM15 10.5l5-3v9l-5-3',
+    pharmacy: 'M9 3h6v6h6v6h-6v6H9v-6H3V9h6z',
+    restaurant: 'M7 3v18M4.5 3v5a2.5 2.5 0 005 0V3M17 3c-2.2 1.2-3 4-3 7h3v11',
+    home: 'M3 11l9-7 9 7M5 9.5V20h14V9.5M10 20v-6h4v6',
+    car: 'M3 13l2-6h14l2 6v5h-3M6 18H3v-5h18M7 18a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0M14 18a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0',
+    bag: 'M5 8h14l-1 13H6zM9 8V6a3 3 0 016 0v2',
+    shop: 'M4 9l1.5-5h13L20 9M4 9h16v11H4zM10 20v-6h4v6',
 };
 </script>
 

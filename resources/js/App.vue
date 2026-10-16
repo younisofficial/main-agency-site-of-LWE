@@ -13,8 +13,12 @@ onMounted(loadContent);
         Skip to content
     </a>
     <SiteHeader />
-    <main id="main">
-        <RouterView />
+    <main id="main" class="min-h-screen">
+        <RouterView v-slot="{ Component, route }">
+            <Transition name="page">
+                <component :is="Component" :key="route.path" />
+            </Transition>
+        </RouterView>
     </main>
     <SiteFooter />
     <WhatsAppFloat />

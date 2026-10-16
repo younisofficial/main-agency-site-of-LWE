@@ -1,41 +1,9 @@
-GROWMIOTECH WEBSITE UPDATE — KAISE LAGANA HAI
-=============================================
+GROWMIOTECH — UPDATE 14 (Solutions page: problem, hal, price, hisaab)
 
-1) Is zip ko apne project folder (main-agency-site) ke andar extract karein.
-   Windows poochay "Replace files?" to "Replace all / Yes to all" karein.
-   (Is zip mein .env, vendor ya node_modules NAHI hain — aap ki settings safe hain.)
+1) Zip extract → "Replace all". Purana public/build pehle DELETE karein, phir naya daalein.
+2) Terminal:
+   php artisan optimize:clear
+   php artisan config:cache
+3) Ctrl + F5 → growmiotech.com/solutions
 
-2) Purani dummy images delete kar sakte hain (zaroori nahi):
-   public/images/portfolio/sample-1.svg ... sample-9.svg
-   public/images/team/member-1.svg ... member-7.svg
-
-3) Terminal mein project folder mein yeh commands chalayein (ek ek kar ke):
-   php artisan migrate
-   php artisan db:seed
-   php artisan config:clear
-   npm run build
-
-   - migrate: database mein PKR price range ka naya column banata hai,
-     aur contact form mein email optional kar deta hai.
-   - db:seed: nayi services, PKR prices aur Recent Work (6 projects) daal deta hai.
-
-4) ZAROORI — apni asli details likhein: config/agency.php
-   'phone'    => '+92 300 0000000'   <- apna number
-   'whatsapp' => '923000000000'      <- apna WhatsApp number (sirf digits, 92 se shuru, 0 ke baghair)
-   'email', 'address', 'hours'       <- apni details
-   Har "WhatsApp us" aur "Order on WhatsApp" button isi number par jata hai.
-   Badalne ke baad: php artisan config:clear
-
-5) Team (config/agency.php → 'team'):
-   Beech mein: Imran Sheikh — Project Manager
-   Gird: Muhammad Younis (Full Stack Web Developer), Talha (Advertiser & Marketer),
-         Hassan (Graphic Designer), Shumaila (Video Editor)
-   Agar Talha aur Hassan ki photo ulat gayi ho, to bas dono ki 'photo' lines aapas mein badal dein.
-
-6) Prices aur package ki details: database/seeders/DatabaseSeeder.php → plans()
-   'price' = kam se kam, 'price_max' = zyada se zyada (ek hi price ho to price_max hata dein).
-   Har package ki features list (pages, din, free support) maine aam market ke hisaab se likhi hai —
-   apne hisaab se check kar ke badal lein, phir: php artisan db:seed
-
-7) Recent Work: database/seeders/DatabaseSeeder.php → projects()
-   Kisi project par live website ka link lagana ho to us mein 'url' => 'https://...' add karein.
+Likhai/price badalni ho: config/agency.php → solutions (phir php artisan config:cache)

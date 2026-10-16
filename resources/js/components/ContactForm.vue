@@ -68,11 +68,6 @@ function reset() {
                 <p v-if="errors.phone" class="field-error">{{ errors.phone[0] }}</p>
             </div>
             <div>
-                <label for="email" class="field-label">Email <span class="font-normal text-muted">(optional)</span></label>
-                <input id="email" v-model.trim="form.email" type="email" autocomplete="email" class="field" :aria-invalid="!!errors.email" />
-                <p v-if="errors.email" class="field-error">{{ errors.email[0] }}</p>
-            </div>
-            <div>
                 <label for="budget" class="field-label">Budget <span class="font-normal text-muted">(optional)</span></label>
                 <select id="budget" v-model="form.budget" class="field">
                     <option value="">Choose your budget</option>

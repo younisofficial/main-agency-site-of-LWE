@@ -3,48 +3,52 @@
 @source '../views';
 @source '../js';
 
-/* Design tokens — "Warm Paper & Spruce" palette. Change colours and fonts here. */
+/* Design tokens — "Clean White, Navy & Emerald" palette. Change colours and fonts here. */
 @theme {
     --font-sans: 'Noto Sans', ui-sans-serif, system-ui, sans-serif;
     --font-display: 'Plus Jakarta Sans', 'Noto Sans', ui-sans-serif, system-ui, sans-serif;
 
     /* Neutrals */
-    --color-paper: #fbfaf8;          /* page background */
-    --color-surface: #f4f2ed;        /* cards, bands, chips */
-    --color-line: #e7e4dc;           /* borders, dividers */
-    --color-faint: #b8b3a7;          /* placeholders, disabled */
-    --color-muted: #7a7569;          /* meta text, captions */
-    --color-body: #454138;           /* body copy */
-    --color-ink: #1f1c18;            /* headings */
+    --color-paper: #ffffff;          /* page background */
+    --color-surface: #f5f7fa;        /* soft bands, chips */
+    --color-line: #e3e8ef;           /* borders, dividers */
+    --color-faint: #a3adbb;          /* placeholders, disabled */
+    --color-muted: #64748b;          /* meta text, captions */
+    --color-body: #334155;           /* body copy */
+    --color-ink: #0f172a;            /* headings */
 
-    /* Accent — Spruce */
-    --color-accent: #31685a;         /* CTAs, links, badges, metrics */
-    --color-accent-strong: #275248;  /* hover / pressed */
-    --color-accent-soft: #e2ebe6;    /* tinted chips, selected states */
+    /* Accent — Emerald (matches the logo arrow) */
+    --color-accent: #0e9f6e;         /* CTAs, links, badges */
+    --color-accent-strong: #057a55;  /* hover / pressed */
+    --color-accent-soft: #def7ec;    /* tinted chips, selected states */
 
     /* Support */
-    --color-star: #d8a444;           /* review stars only */
-    --color-success: #4f8264;        /* positive deltas */
+    --color-star: #f59e0b;
+    --color-success: #0e9f6e;
+    --color-sky: #2563eb;            /* second accent for gradients */
 
-    /* Bold layer — dark bands and highlights that make the page pop */
-    --color-night: #0b241f;          /* hero, process band, footer */
-    --color-night-soft: #14352d;     /* cards on dark */
-    --color-mint: #8fe6c1;           /* highlight text on dark */
-    --color-sun: #f6b93b;            /* main button on dark, small highlights */
-    --color-sun-strong: #e9a41c;
+    /* Dark layer — navy bands (steps, popular package, footer) */
+    --color-night: #0b1b33;
+    --color-night-soft: #13294b;
+    --color-mint: #34d399;           /* highlight text on navy */
+    --color-sun: #fbbf24;            /* yellow button, small highlights */
+    --color-sun-strong: #f59e0b;
 
     /* One colour per service group */
-    --color-dev: #1c8a6e;
-    --color-dev-soft: #dcf2ea;
-    --color-design: #d4841a;
-    --color-design-soft: #fbecd2;
-    --color-marketing: #d6513c;
-    --color-marketing-soft: #fbe1da;
+    --color-dev: #0e9f6e;
+    --color-dev-soft: #def7ec;
+    --color-design: #d97706;
+    --color-design-soft: #fef3c7;
+    --color-marketing: #2563eb;
+    --color-marketing-soft: #dbeafe;
 }
 
 @layer base {
     html {
         scroll-behavior: smooth;
+    }
+    html, body {
+        overflow-x: clip;   /* hidden side-slide animations never cause sideways scrolling */
     }
     body {
         @apply bg-paper font-sans text-body antialiased;
@@ -89,10 +93,10 @@
         @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-6 py-3 text-base font-semibold transition-colors;
     }
     .btn-primary {
-        @apply bg-accent text-white shadow-[0_8px_20px_-8px_rgba(49,104,90,0.7)] hover:bg-accent-strong;
+        @apply bg-accent text-white shadow-[0_8px_20px_-8px_rgba(14,159,110,0.7)] hover:bg-accent-strong;
     }
     .btn-sun {
-        @apply bg-sun text-night shadow-[0_10px_24px_-10px_rgba(246,185,59,0.9)] hover:bg-sun-strong;
+        @apply bg-sun text-night shadow-[0_10px_24px_-10px_rgba(245,158,11,0.8)] hover:bg-sun-strong;
     }
     .btn-ghost {
         @apply border border-white/25 text-white hover:border-white hover:bg-white/10;
@@ -125,14 +129,12 @@
 .tone-design { --tone: var(--color-design); --tone-soft: var(--color-design-soft); }
 .tone-marketing { --tone: var(--color-marketing); --tone-soft: var(--color-marketing-soft); }
 
-/* Dark band with soft colour glows and a faint grid */
+/* Navy band with soft colour glows */
 .band-night {
     color: #fff;
     background:
-        radial-gradient(55% 60% at 88% 0%, rgb(143 230 193 / 0.22), transparent 70%),
-        radial-gradient(45% 55% at 0% 100%, rgb(246 185 59 / 0.16), transparent 70%),
-        linear-gradient(rgb(255 255 255 / 0.035) 1px, transparent 1px) 0 0 / 100% 56px,
-        linear-gradient(90deg, rgb(255 255 255 / 0.035) 1px, transparent 1px) 0 0 / 56px 100%,
+        radial-gradient(55% 60% at 90% 0%, rgb(52 211 153 / 0.20), transparent 70%),
+        radial-gradient(45% 55% at 0% 100%, rgb(37 99 235 / 0.25), transparent 70%),
         var(--color-night);
 }
 .band-night h1,
@@ -141,11 +143,23 @@
     color: #fff;
 }
 
+/* Light band for page tops: white with soft emerald and blue light */
+.band-light {
+    background:
+        radial-gradient(50% 70% at 95% 0%, rgb(14 159 110 / 0.12), transparent 70%),
+        radial-gradient(45% 60% at 0% 100%, rgb(37 99 235 / 0.10), transparent 70%),
+        linear-gradient(180deg, #f5fbf8, #ffffff);
+    border-bottom: 1px solid var(--color-line);
+}
+
 .text-glow {
-    background: linear-gradient(90deg, var(--color-mint), var(--color-sun));
+    background: linear-gradient(90deg, var(--color-accent), var(--color-sky));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+}
+.band-night .text-glow {
+    background-image: linear-gradient(90deg, var(--color-mint), var(--color-sun));
 }
 
 /* Card that lifts and picks up its group colour on hover */
@@ -179,6 +193,31 @@
     animation-play-state: paused;
 }
 
+/* Scroll reveal: things fade in from left, right, top or bottom (see resources/js/lib/reveal.js) */
+.reveal {
+    opacity: 0;
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+    will-change: opacity, transform;
+}
+.reveal-up { transform: translateY(48px); }
+.reveal-down { transform: translateY(-48px); }
+.reveal-left { transform: translateX(-64px); }
+.reveal-right { transform: translateX(64px); }
+.reveal-zoom { transform: scale(0.9); }
+.reveal.is-visible { opacity: 1; transform: none; }
+
+/* Soft fade when moving between pages */
+/* (the old page is removed at once, the new one fades in — no empty gap) */
+.page-enter-active { transition: opacity 0.35s ease, transform 0.35s ease; }
+.page-enter-from { opacity: 0; transform: translateY(14px); }
+.page-leave-active { display: none; }
+
+/* Hero photo follows the mouse a little */
+.parallax { transition: transform 0.3s ease-out; transform: translate(calc(var(--mx, 0) * -14px), calc(var(--my, 0) * -14px)); }
+.parallax-back { transition: transform 0.3s ease-out; transform: translate(calc(var(--mx, 0) * 22px), calc(var(--my, 0) * 22px)); }
+
 @media (prefers-reduced-motion: reduce) {
     .float, .float-slow, .orbit-ring, .orbit-upright { animation: none !important; }
+    .reveal { opacity: 1 !important; transform: none !important; }
+    .parallax, .parallax-back { transform: none !important; }
 }

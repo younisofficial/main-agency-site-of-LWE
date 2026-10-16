@@ -7,7 +7,7 @@ import { site, whatsappLink, phoneLink } from '../lib/site';
 <template>
     <section class="section">
         <div class="wrap">
-            <div class="relative overflow-hidden rounded-3xl bg-accent px-7 py-12 text-white sm:px-12 sm:py-16">
+            <div v-reveal="'zoom'" class="relative overflow-hidden rounded-3xl bg-accent px-7 py-12 text-white sm:px-12 sm:py-16">
                 <span class="absolute -right-16 -top-24 size-72 rounded-full bg-mint/25" aria-hidden="true"></span>
                 <span class="absolute -bottom-28 right-40 size-56 rounded-full bg-sun/30" aria-hidden="true"></span>
                 <div class="relative flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">

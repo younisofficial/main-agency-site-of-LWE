@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PricingPlan;
+use App\Models\Project;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
@@ -27,7 +29,7 @@ class PageController extends Controller
             $meta = $agency['seo'][$path];
         } elseif (preg_match('#^/services/([a-z0-9-]+)$#', $path, $m) && ($service = $services->firstWhere('slug', $m[1]))) {
             $meta = [
-                'title' => "{$service->title} Services | {$agency['name']}",
+                'title' => "{$service->title} in Multan, Pakistan | {$agency['name']}",
                 'description' => str($service->summary.' '.$service->description)->limit(155)->toString(),
                 'heading' => $service->title,
             ];
@@ -50,8 +52,13 @@ class PageController extends Controller
             'ogImage' => $base.'/images/og-cover.png',
             'schemas' => $this->schemas($agency, $base, $path, $canonical, $meta, $service),
             'services' => $services,
+            'path' => $path,
+            // Extra plain HTML for Google on the prices and work pages.
+            'plans' => $path === '/pricing' ? $this->plans() : collect(),
+            'projects' => $path === '/portfolio' ? $this->projects() : collect(),
             'bootstrap' => [
-                'site' => collect($agency)->except(['seo', 'team', 'pricing_faqs'])->all(),
+                'site' => collect($agency)->except(['seo', 'team', 'pricing_faqs', 'solutions'])->all(),
+                'solutions' => $agency['solutions'] ?? [],
                 'team' => $agency['team'],
                 'faqs' => $agency['pricing_faqs'],
                 'seo' => $agency['seo'],
@@ -90,6 +97,16 @@ class PageController extends Controller
             ->header('Content-Type', 'text/plain; charset=UTF-8');
     }
 
+    private function plans()
+    {
+        return Schema::hasTable('pricing_plans') ? PricingPlan::orderBy('sort_order')->get() : collect();
+    }
+
+    private function projects()
+    {
+        return Schema::hasTable('projects') ? Project::orderBy('sort_order')->get() : collect();
+    }
+
     private function services()
     {
         // Lets the site load (without service pages) before migrations have been run.
@@ -108,13 +125,21 @@ class PageController extends Controller
             'logo' => $base.'/images/logo.png',
             'image' => $base.'/images/og-cover.png',
             'description' => $agency['seo']['/']['description'],
-            'email' => $agency['email'],
-            'telephone' => $agency['phone'],
-            'address' => [
+            'email' => $agency['email'] ?: null,
+            'telephone' => '+'.$agency['whatsapp'],
+            'address' => array_filter([
                 '@type' => 'PostalAddress',
-                'streetAddress' => $agency['address'],
+                'streetAddress' => $agency['street'] ?? null,
+                'addressLocality' => $agency['city'] ?? null,
+                'addressRegion' => $agency['region'] ?? null,
                 'addressCountry' => $agency['country'],
+            ]),
+            'areaServed' => [
+                ['@type' => 'City', 'name' => $agency['city'] ?? 'Multan'],
+                ['@type' => 'Country', 'name' => 'Pakistan'],
             ],
+            'priceRange' => 'Rs 7,000 – Rs 50,000',
+            'currenciesAccepted' => 'PKR',
             'sameAs' => array_values($agency['social']),
         ]);
 
@@ -158,7 +183,58 @@ class PageController extends Controller
             ];
         }
 
+        if ($path === '/solutions') {
+            $schemas[] = [
+                '@context' => 'https://schema.org',
+                '@type' => 'ItemList',
+                'name' => 'Website solutions by business',
+                'itemListElement' => collect($agency['solutions'] ?? [])->values()->map(fn ($item, $i) => [
+                    '@type' => 'ListItem',
+                    'position' => $i + 1,
+                    'item' => [
+                        '@type' => 'Service',
+                        'name' => "Website for {$item['title']}",
+                        'description' => implode('. ', $item['solutions']).'.',
+                        'image' => $base.$item['image'],
+                        'areaServed' => 'Pakistan',
+                        'provider' => ['@id' => $base.'/#organization'],
+                        'url' => $base.'/pricing?type='.$item['key'],
+                        'offers' => ['@type' => 'Offer', 'priceCurrency' => 'PKR', 'description' => $item['package'].' package: '.$item['price']],
+                    ],
+                ])->all(),
+            ];
+        }
+
         if ($path === '/pricing') {
+            // Every package with its price, so Google understands the offers.
+            $groups = ['business' => 'Business websites', 'school' => 'School, college and academy websites',
+                'restaurant' => 'Hotel and restaurant websites', 'store' => 'Online store websites',
+                'realestate' => 'Real estate websites', 'rental' => 'Showroom and car rental websites',
+                'pharmacy' => 'Pharmacy websites'];
+            $schemas[] = [
+                '@context' => 'https://schema.org',
+                '@type' => 'OfferCatalog',
+                'name' => "{$agency['name']} website packages",
+                'url' => $canonical,
+                'itemListElement' => $this->plans()->groupBy('category')->map(fn ($plans, $category) => [
+                    '@type' => 'OfferCatalog',
+                    'name' => $groups[$category] ?? ucfirst($category),
+                    'itemListElement' => $plans->map(fn ($plan) => array_filter([
+                        '@type' => 'Offer',
+                        'name' => ($groups[$category] ?? $category).' – '.$plan->name,
+                        'description' => $plan->best_for,
+                        'priceCurrency' => 'PKR',
+                        'price' => $plan->price_max ? null : $plan->price,
+                        'priceSpecification' => $plan->price_max ? [
+                            '@type' => 'PriceSpecification',
+                            'priceCurrency' => 'PKR',
+                            'minPrice' => $plan->price,
+                            'maxPrice' => $plan->price_max,
+                        ] : null,
+                        'seller' => ['@id' => $base.'/#organization'],
+                    ]))->values()->all(),
+                ])->values()->all(),
+            ];
             $schemas[] = [
                 '@context' => 'https://schema.org',
                 '@type' => 'FAQPage',

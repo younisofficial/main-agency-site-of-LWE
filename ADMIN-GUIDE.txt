@@ -1,0 +1,25 @@
+GROWMIOTECH — ADMIN PANEL (contact form ke messages dekhne ke liye)
+====================================================================
+
+1) Is zip ko project folder (main-agency-site) mein extract karein → "Replace all".
+   (Is zip mein config/agency.php NAHI hai — aap ka phone/WhatsApp safe hai.)
+
+2) Apni .env file ke aakhir mein yeh line add karein (apna mazboot password likhein):
+   ADMIN_PASSWORD=yahan-apna-password
+
+3) Yeh commands chalayein:
+   php artisan migrate
+   php artisan config:clear
+
+4) Browser mein kholen:  https://growmiotech.com/admin
+   (local par: http://127.0.0.1:8000/admin)
+   Password daalein → saare messages nazar aa jayenge.
+
+Har message par:
+   - Reply on WhatsApp  → customer ki WhatsApp chat khul jati hai
+   - Call               → customer ko call
+   - Mark as done       → reply karne ke baad isay "New" list se hata dein
+   - Delete             → message mita dein
+
+Password kisi ko na batayein. Badalna ho to .env mein ADMIN_PASSWORD badal kar
+php artisan config:clear chalayein.

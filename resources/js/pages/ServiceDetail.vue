@@ -7,6 +7,7 @@ import { content } from '../lib/api';
 import { categories, site, whatsappLink } from '../lib/site';
 import ChatIcon from '../components/ChatIcon.vue';
 import { applySeo, notFoundSeo } from '../lib/seo';
+import { cycle } from '../lib/reveal';
 
 const props = defineProps({ slug: { type: String, required: true } });
 
@@ -19,7 +20,7 @@ const categoryLabel = computed(() => categories.find((c) => c.key === service.va
 watchEffect(() => {
     if (service.value) {
         applySeo({
-            title: `${service.value.title} Services | ${site.name}`,
+            title: `${service.value.title} in Multan, Pakistan | ${site.name}`,
             description: `${service.value.summary} ${service.value.description}`.slice(0, 155),
             path: `/services/${props.slug}`,
         });
@@ -48,7 +49,7 @@ watchEffect(() => {
 
                         <h2 class="mt-12 text-2xl">What you get</h2>
                         <ul class="mt-5 max-w-2xl space-y-3">
-                            <li v-for="item in service.deliverables" :key="item" class="flex gap-3 rounded-xl border border-line bg-white px-5 py-3.5 font-medium text-ink">
+                            <li v-for="(item, i) in service.deliverables" :key="item" v-reveal="{ dir: 'left', delay: i * 60 }" class="flex gap-3 rounded-xl border border-line bg-white px-5 py-3.5 font-medium text-ink">
                                 <svg viewBox="0 0 20 20" class="mt-1 size-5 shrink-0 text-[var(--tone)]" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <path d="M4 10.5l4 4 8-9" />
                                 </svg>
@@ -57,7 +58,7 @@ watchEffect(() => {
                         </ul>
                     </div>
 
-                    <aside class="band-night h-fit rounded-3xl p-7 shadow-[0_30px_60px_-30px_rgba(11,36,31,0.9)] sm:p-8 lg:sticky lg:top-28">
+                    <aside v-reveal="'right'" class="band-night h-fit rounded-3xl p-7 shadow-[0_30px_60px_-30px_rgba(11,36,31,0.9)] sm:p-8 lg:sticky lg:top-28">
                         <h2 class="text-2xl">Want this service?</h2>
                         <p class="mt-2 text-white/75">Send us a WhatsApp message. We will tell you the price and time.</p>
                         <dl class="mt-6 border-t border-white/15 pt-5">
@@ -79,7 +80,7 @@ watchEffect(() => {
                 <div v-if="related.length" class="mt-20">
                     <h2 class="text-2xl">More in {{ categoryLabel?.toLowerCase() }}</h2>
                     <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        <ServiceCard v-for="item in related" :key="item.slug" :service="item" />
+                        <ServiceCard v-for="(item, i) in related" :key="item.slug" v-reveal="cycle(i)" :service="item" />
                     </div>
                 </div>
             </div>
